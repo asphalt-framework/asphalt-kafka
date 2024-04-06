@@ -1,0 +1,110 @@
+[build-system]
+requires = [
+    "setuptools >= 64",
+    "setuptools_scm >= 6.4"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "asphalt-kafka"
+description = "Kafka component for the Asphalt framework"
+readme = "README.rst"
+authors = [{name = "Alex Grönholm", email = "alex.gronholm@nextday.fi"}]
+license = {text = "Apache License 2.0"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "asphalt ~= 4.8",
+    "aiokafka >= 0.10",
+]
+dynamic = ["version"]
+
+[project.urls]
+Documentation = "https://asphalt-kafka.readthedocs.org/en/latest/"
+"Source code" = "https://github.com/asphalt-framework/asphalt-kafka"
+"Issue tracker" = "https://github.com/asphalt-framework/asphalt-kafka/issues"
+"Help and support" = "https://github.com/asphalt-framework/asphalt/wiki/Help-and-support"
+
+[project.optional-dependencies]
+test = [
+    "anyio[trio] ~= 4.1",
+    "coverage >= 7",
+    "pytest >= 7.4",
+]
+doc = [
+    "Sphinx >= 7.0",
+    "sphinx-rtd-theme >= 1.3.0",
+    "sphinx-autodoc-typehints >= 1.22",
+]
+
+[project.entry-points."asphalt.components"]
+kafka_admin = "asphalt.kafka:KafkaAdminComponent"
+kafka_consumer = "asphalt.kafka:KafkaConsumerComponent"
+kafka_producer = "asphalt.kafka:KafkaProducerComponent"
+
+[tool.setuptools_scm]
+version_scheme = "post-release"
+local_scheme = "dirty-tag"
+
+[tool.ruff.lint]
+extend-select = [
+    "ASYNC",        # flake8-async
+    "W",            # pycodestyle warnings
+    "G",            # flake8-logging-format
+    "I",            # isort
+    "ISC",          # flake8-implicit-str-concat
+    "PGH",          # pygrep-hooks
+    "RUF100",       # unused noqa (yesqa)
+    "UP",           # pyupgrade
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["asphalt.kafka"]
+
+[tool.mypy]
+python_version = "3.8"
+strict = true
+explicit_package_bases = true
+mypy_path = ["src", "tests", "examples"]
+
+[tool.pytest.ini_options]
+addopts = "-rsx --tb=short"
+
+[tool.coverage.run]
+source = ["asphalt.kafka"]
+relative_files = true
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py38, py39, py310, py311, py312, pypy3
+skip_missing_interpreters = true
+minversion = 4.0
+
+[testenv]
+extras = test
+commands = python -m pytest {posargs}
+package = editable
+
+[testenv:pypy3]
+commands = pytest {posargs}
+
+[testenv:docs]
+extras = doc
+commands = sphinx-build -W -n docs build/sphinx {posargs}
+"""
