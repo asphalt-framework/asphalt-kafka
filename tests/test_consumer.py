@@ -4,7 +4,7 @@ import ssl
 
 import pytest
 from aiokafka import AIOKafkaConsumer
-from asphalt.core import Context, add_resource, get_resource_nowait
+from asphalt.core import Context, add_resource, get_resource_nowait, start_component
 
 from asphalt.kafka import KafkaConsumerComponent
 
@@ -23,14 +23,17 @@ async def test_default_settings() -> None:
 )
 async def test_existing_resource(lookup: bool) -> None:
     consumer = AIOKafkaConsumer()
-    component = KafkaConsumerComponent(
-        existing_resource="default" if lookup else consumer, resource_name="alt"
-    )
     async with Context():
         if lookup:
             add_resource(consumer)
 
-        await component.start()
+        await start_component(
+            KafkaConsumerComponent,
+            {
+                "existing_resource": "default" if lookup else consumer,
+                "resource_name": "alt",
+            },
+        )
         assert get_resource_nowait(AIOKafkaConsumer, "alt") is consumer
 
 
@@ -47,11 +50,13 @@ async def test_existing_resource_conflict() -> None:
 )
 async def test_ssl_context(lookup: bool) -> None:
     ssl_context = ssl.create_default_context()
-    component = KafkaConsumerComponent(ssl_context="default" if lookup else ssl_context)
     async with Context():
         if lookup:
             add_resource(ssl_context)
 
-        await component.start()
+        await start_component(
+            KafkaConsumerComponent,
+            {"ssl_context": "default" if lookup else ssl_context},
+        )
         consumer = get_resource_nowait(AIOKafkaConsumer)
         assert consumer._client._ssl_context is ssl_context

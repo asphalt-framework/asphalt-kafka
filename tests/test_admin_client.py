@@ -4,7 +4,7 @@ import ssl
 
 import pytest
 from aiokafka.admin import AIOKafkaAdminClient
-from asphalt.core import Context, add_resource, get_resource_nowait
+from asphalt.core import Context, add_resource, get_resource_nowait, start_component
 
 from asphalt.kafka import KafkaAdminComponent
 
@@ -23,14 +23,17 @@ async def test_default_settings() -> None:
 )
 async def test_existing_resource(lookup: bool) -> None:
     client = AIOKafkaAdminClient()
-    component = KafkaAdminComponent(
-        existing_resource="default" if lookup else client, resource_name="alt"
-    )
     async with Context():
         if lookup:
             add_resource(client)
 
-        await component.start()
+        await start_component(
+            KafkaAdminComponent,
+            {
+                "existing_resource": "default" if lookup else client,
+                "resource_name": "alt",
+            },
+        )
         assert get_resource_nowait(AIOKafkaAdminClient, "alt") is client
 
 
@@ -47,11 +50,13 @@ async def test_existing_resource_conflict() -> None:
 )
 async def test_ssl_context(lookup: bool) -> None:
     ssl_context = ssl.create_default_context()
-    component = KafkaAdminComponent(ssl_context="default" if lookup else ssl_context)
     async with Context():
         if lookup:
             add_resource(ssl_context)
 
-        await component.start()
+        await start_component(
+            KafkaAdminComponent,
+            {"ssl_context": "default" if lookup else ssl_context},
+        )
         client = get_resource_nowait(AIOKafkaAdminClient)
         assert client._client._ssl_context is ssl_context
