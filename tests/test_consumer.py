@@ -4,8 +4,8 @@ import ssl
 
 import pytest
 from aiokafka import AIOKafkaConsumer
-from asphalt.core import Context, add_resource, get_resource_nowait, start_component
 
+from asphalt.core import Context, add_resource, get_resource_nowait, start_component
 from asphalt.kafka import KafkaConsumerComponent
 
 pytestmark = pytest.mark.anyio
