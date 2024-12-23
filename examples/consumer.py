@@ -1,4 +1,5 @@
 from aiokafka import AIOKafkaConsumer
+
 from asphalt.core import get_resource
 
 
