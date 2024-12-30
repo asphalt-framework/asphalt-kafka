@@ -71,6 +71,7 @@ extend-select = [
 
 [tool.ruff.lint.isort]
 known-first-party = ["asphalt.kafka"]
+known-third-party = ["asphalt.core"]
 
 [tool.mypy]
 python_version = "3.9"
@@ -79,7 +80,7 @@ explicit_package_bases = true
 mypy_path = ["src", "tests", "examples"]
 
 [tool.pytest.ini_options]
-addopts = "-rsx --tb=short"
+addopts = ["-rsfE", "--tb=short"]
 
 [tool.coverage.run]
 source = ["asphalt.kafka"]
