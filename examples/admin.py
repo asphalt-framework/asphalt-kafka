@@ -1,5 +1,4 @@
 from aiokafka.admin import AIOKafkaAdminClient, NewTopic
-
 from asphalt.core import get_resource
 
 

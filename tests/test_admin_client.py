@@ -4,8 +4,8 @@ import ssl
 
 import pytest
 from aiokafka.admin import AIOKafkaAdminClient
-
 from asphalt.core import Context, add_resource, get_resource_nowait, start_component
+
 from asphalt.kafka import KafkaAdminComponent
 
 pytestmark = pytest.mark.anyio
