@@ -25,7 +25,7 @@ classifiers = [
 ]
 requires-python = ">=3.9"
 dependencies = [
-    "asphalt ~= 4.8",
+    "asphalt @ git+https://github.com/asphalt-framework/asphalt",
     "aiokafka >= 0.10",
 ]
 dynamic = ["version"]
@@ -64,7 +64,7 @@ extend-select = [
     "I",            # isort
     "ISC",          # flake8-implicit-str-concat
     "PGH",          # pygrep-hooks
-    "RUF100",       # unused noqa (yesqa)
+    "RUF",       # unused noqa (yesqa)
     "UP",           # pyupgrade
     "W",            # pycodestyle warnings
 ]
