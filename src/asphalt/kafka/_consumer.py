@@ -8,6 +8,7 @@ from ssl import SSLContext
 from typing import Any
 
 from aiokafka import AIOKafkaConsumer
+
 from asphalt.core import Component, add_resource, context_teardown, get_resource
 
 
@@ -35,9 +36,7 @@ class KafkaConsumerComponent(Component):
     async def start(self) -> AsyncGenerator[None, Any]:
         if self.existing_resource is not None:
             if isinstance(self.existing_resource, str):
-                consumer = await get_resource(
-                    AIOKafkaConsumer, self.existing_resource, wait=True
-                )
+                consumer = await get_resource(AIOKafkaConsumer, self.existing_resource)
             else:
                 consumer = self.existing_resource
 
@@ -48,7 +47,7 @@ class KafkaConsumerComponent(Component):
             return
 
         if isinstance(self.ssl_context, str):
-            self.options["ssl_context"] = await get_resource(SSLContext, wait=True)
+            self.options["ssl_context"] = await get_resource(SSLContext)
         elif self.ssl_context is not None:
             self.options["ssl_context"] = self.ssl_context
 
