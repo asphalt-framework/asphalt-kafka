@@ -6,7 +6,6 @@ from ssl import SSLContext
 from typing import Any
 
 from aiokafka.admin import AIOKafkaAdminClient
-
 from asphalt.core import Component, add_resource, get_resource
 
 

@@ -8,7 +8,6 @@ from ssl import SSLContext
 from typing import Any
 
 from aiokafka import AIOKafkaConsumer
-
 from asphalt.core import Component, add_resource, context_teardown, get_resource
 
 
