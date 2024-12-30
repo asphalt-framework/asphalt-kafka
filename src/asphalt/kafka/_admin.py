@@ -32,9 +32,7 @@ class KafkaAdminComponent(Component):
     async def start(self) -> None:
         if self.existing_resource is not None:
             if isinstance(self.existing_resource, str):
-                client = await get_resource(
-                    AIOKafkaAdminClient, self.existing_resource, wait=True
-                )
+                client = await get_resource(AIOKafkaAdminClient, self.existing_resource)
             else:
                 client = self.existing_resource
 
@@ -44,7 +42,7 @@ class KafkaAdminComponent(Component):
             return
 
         if isinstance(self.ssl_context, str):
-            self.options["ssl_context"] = await get_resource(SSLContext, wait=True)
+            self.options["ssl_context"] = await get_resource(SSLContext)
         elif self.ssl_context is not None:
             self.options["ssl_context"] = self.ssl_context
 

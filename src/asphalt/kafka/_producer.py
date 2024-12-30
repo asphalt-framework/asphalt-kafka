@@ -29,9 +29,7 @@ class KafkaProducerComponent(Component):
     async def start(self) -> None:
         if self.existing_resource is not None:
             if isinstance(self.existing_resource, str):
-                producer = await get_resource(
-                    AIOKafkaProducer, self.existing_resource, wait=True
-                )
+                producer = await get_resource(AIOKafkaProducer, self.existing_resource)
             else:
                 producer = self.existing_resource
 
@@ -41,7 +39,7 @@ class KafkaProducerComponent(Component):
             return
 
         if isinstance(self.ssl_context, str):
-            self.options["ssl_context"] = await get_resource(SSLContext, wait=True)
+            self.options["ssl_context"] = await get_resource(SSLContext)
         elif self.ssl_context is not None:
             self.options["ssl_context"] = self.ssl_context
 
